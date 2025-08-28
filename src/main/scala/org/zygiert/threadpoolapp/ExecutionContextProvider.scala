@@ -40,7 +40,10 @@ object ExecutionContextProvider:
               s"Unknown thread pool config: $value. Allowed values: ${ThreadPoolConfig.values.mkString(",")}"
             )
           )
-      case None => throw new IllegalStateException("No thread pool config provided. Please provide it using -DthreadPoolConfig=VALUE")
+      case None =>
+        throw new IllegalStateException(
+          s"No thread pool config provided. Please provide it using -DthreadPoolConfig=VALUE. Possible values are: ${ThreadPoolConfig.values.mkString(",")}"
+        )
     }
 
   private def forkJoinPool: ExecutionContext = ExecutionContext.fromExecutor(Executors.newWorkStealingPool())
