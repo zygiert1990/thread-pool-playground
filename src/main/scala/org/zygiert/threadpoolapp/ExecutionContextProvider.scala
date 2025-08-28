@@ -6,7 +6,7 @@ import scala.util.Try
 
 object ExecutionContextProvider:
 
-  private val threadPoolConfigParam: String = "threadPoolConfig"
+  val threadPoolConfigParam: String = "threadPoolConfig"
 
   case class ExecutionContexts(cpuBound: ExecutionContext, ioBound: ExecutionContext)
 

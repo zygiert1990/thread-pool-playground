@@ -8,13 +8,13 @@ import scala.concurrent.{ExecutionContext, Future}
 object FileProcessor extends StrictLogging:
 
   private val numberOfCores = Runtime.getRuntime.availableProcessors()
-  private val baseExponent = 1000
+  private val baseExponent = 100
 
   given ExecutionContext = ExecutionContextProvider.executionContexts.cpuBound
 
   def process(longIO: Boolean, computationComplexity: Int, concurrencyMultiplier: Int): Future[BigInt] =
     for {
-      lines <- if (longIO) FileLoader.load(500) else FileLoader.load(0)
+      lines <- FileLoaderAdapter.load(longIO)
       notEmptyLines <- Future(lines.filter(!_.isBlank))
       allWords <- Future(notEmptyLines.flatMap(_.split(" ").toSeq))
       groupedWords <- Future(allWords.grouped(resolveGroupSize(concurrencyMultiplier, allWords.length)))

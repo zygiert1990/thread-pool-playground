@@ -11,23 +11,21 @@ import scala.concurrent.{ExecutionContext, Future}
 object FileLoader extends StrictLogging:
 
   private val ioAppUrl = sys.env.getOrElse("ioAppUrl", "http://localhost:9090")
+  private val delay = 500
 
   given JsonValueCodec[Seq[String]] = JsonCodecMaker.make
-  given ExecutionContext = ExecutionContextProvider.executionContexts.ioBound
 
-  def load(delay: Long): Future[Seq[String]] =
-    Future {
-      val start = System.nanoTime()
+  def load(longIO: Boolean): Seq[String] =
+    val start = System.nanoTime()
 
-      val response = basicRequest
-        .get(uri"$ioAppUrl/file?delay=$delay")
-        .response(asJson[Seq[String]])
-        .send(DefaultSyncBackend())
+    val response = basicRequest
+      .get(uri"$ioAppUrl/file?delay=${if (longIO) delay else 0}")
+      .response(asJson[Seq[String]])
+      .send(DefaultSyncBackend())
 
-      val end = System.nanoTime()
-      logger.debug(s"Reading file took: ${end - start}ns")
-      response.body match {
-        case Left(error)  => throw new IllegalStateException(error)
-        case Right(value) => value
-      }
+    val end = System.nanoTime()
+    logger.debug(s"Reading file took: ${end - start}ns")
+    response.body match {
+      case Left(error)  => throw new IllegalStateException(error)
+      case Right(value) => value
     }
