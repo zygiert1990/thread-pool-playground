@@ -2,6 +2,7 @@ package org.zygiert.threadpoolapp
 
 import sttp.tapir.*
 import sttp.tapir.server.ServerEndpoint
+import sttp.tapir.server.metrics.prometheus.PrometheusMetrics
 import sttp.tapir.swagger.bundle.SwaggerInterpreter
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -34,4 +35,7 @@ object Endpoints:
   private val docEndpoints: List[ServerEndpoint[Any, Future]] = SwaggerInterpreter()
     .fromServerEndpoints[Future](apiEndpoints, "thread-pool-playground-app", "1.0.0")
 
-  val all: List[ServerEndpoint[Any, Future]] = apiEndpoints ++ docEndpoints
+  val prometheusMetrics: PrometheusMetrics[Future] = PrometheusMetrics.default[Future]()
+  private val metricsEndpoint: ServerEndpoint[Any, Future] = prometheusMetrics.metricsEndpoint
+
+  val all: List[ServerEndpoint[Any, Future]] = apiEndpoints ++ docEndpoints ++ List(metricsEndpoint)

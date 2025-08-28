@@ -17,6 +17,7 @@ lazy val rootProject = (project in file("."))
         "com.softwaremill.sttp.tapir" %% "tapir-netty-server" % tapirVersion,
         "com.softwaremill.sttp.tapir" %% "tapir-swagger-ui-bundle" % tapirVersion,
         "com.softwaremill.sttp.tapir" %% "tapir-jsoniter-scala" % tapirVersion,
+        "com.softwaremill.sttp.tapir" %% "tapir-prometheus-metrics" % tapirVersion,
         "com.softwaremill.sttp.client4" %% "core" % sttp4Version,
         "com.softwaremill.sttp.client4" %% "jsoniter" % sttp4Version,
         "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % "2.37.6",
