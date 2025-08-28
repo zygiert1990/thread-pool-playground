@@ -1,7 +1,10 @@
 import sbtassembly.AssemblyPlugin.autoImport.{assembly, assemblyMergeStrategy}
 
-val tapirVersion = "1.11.36"
+val tapirVersion = "1.11.42"
 val sttp4Version = "4.0.9"
+val gatlingVersion = "3.14.3"
+
+ThisBuild / externalResolvers := Seq(Resolver.mavenCentral)
 
 lazy val rootProject = (project in file("."))
   .settings(
@@ -16,15 +19,18 @@ lazy val rootProject = (project in file("."))
         "com.softwaremill.sttp.tapir" %% "tapir-jsoniter-scala" % tapirVersion,
         "com.softwaremill.sttp.client4" %% "core" % sttp4Version,
         "com.softwaremill.sttp.client4" %% "jsoniter" % sttp4Version,
-        "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % "2.36.7",
+        "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % "2.37.6",
         "ch.qos.logback" % "logback-classic" % "1.5.18",
         "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5",
         "com.softwaremill.sttp.tapir" %% "tapir-sttp-stub-server" % tapirVersion % Test,
-        "org.scalatest" %% "scalatest" % "3.2.19" % Test
+        "org.scalatest" %% "scalatest" % "3.2.19" % Test,
+        "io.gatling.highcharts" % "gatling-charts-highcharts" % gatlingVersion % Test excludeAll ("com.typesafe.scala-logging", "scala-logging"),
+        "io.gatling" % "gatling-test-framework" % gatlingVersion % Test excludeAll ("com.typesafe.scala-logging", "scala-logging")
       )
     )
   )
   .settings(fatJarSettings)
+  .enablePlugins(GatlingPlugin)
 
 lazy val fatJarSettings = Seq(
   assembly / assemblyJarName := "thread-pool-playground.jar",
