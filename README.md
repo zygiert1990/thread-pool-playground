@@ -19,3 +19,8 @@ thread-pool-playground-app:
 - `ioAppUrl` (optional) - default value is `http://localhost:9090`
 - `fjpBlockingIo` (optional) - Indicates whether use `blocking` operation, default value is `false`. It only applies to
   FJP thread pool config.
+- `host` (optional) - default value is `localhost`
+
+thread-pool-playground-io-app:
+
+- `host` (optional) - default value is `localhost`

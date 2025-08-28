@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  thread-pool-playground-FJP:
+    image: thread-pool-playground
+    ports:
+      - "8080:8080"
+    environment:
+      - threadPoolConfig=FJP
+      - ioAppUrl=http://thread-pool-playground-io:9090
+      - host=0.0.0.0
+    stdin_open: true
+    tty: true
+    command: [ "java", "-cp", "app.jar", "org.zygiert.threadpoolapp.run" ]
+  thread-pool-playground-FJP-blocking:
+    image: thread-pool-playground
+    ports:
+      - "8081:8080"
+    environment:
+      - threadPoolConfig=FJP
+      - fjpBlockingIo=true
+      - ioAppUrl=http://thread-pool-playground-io:9090
+      - host=0.0.0.0
+    stdin_open: true
+    tty: true
+    command: [ "java", "-cp", "app.jar", "org.zygiert.threadpoolapp.run" ]
+  thread-pool-playground-io:
+    image: thread-pool-playground
+    ports:
+      - "9090:9090"
+    environment:
+      - host=0.0.0.0
+    stdin_open: true
+    tty: true
+    command: [ "java", "-cp", "app.jar", "org.zygiert.ioapp.run" ]

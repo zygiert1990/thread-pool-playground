@@ -9,9 +9,11 @@ import ExecutionContext.Implicits.global
 
 @main def run(): Unit =
 
+  val host = sys.env.getOrElse("host", "localhost")
+  
   val program =
     for
-      binding <- NettyFutureServer().port(8080).addEndpoints(Endpoints.all).start()
+      binding <- NettyFutureServer().host(host).port(8080).addEndpoints(Endpoints.all).start()
       _ <- Future:
         println(s"Go to http://localhost:${binding.port}/docs to open SwaggerUI. Press ENTER key to exit.")
         StdIn.readLine()

@@ -13,7 +13,7 @@ object ExecutionContextProvider:
   val executionContexts: ExecutionContexts = resolveExecutionContexts
 
   private def resolveExecutionContexts: ExecutionContexts =
-    sys.props.get(threadPoolConfigParam) match {
+    sys.env.get(threadPoolConfigParam) match {
       case Some(value) =>
         Try(ThreadPoolConfig.valueOf(value))
           .map {
