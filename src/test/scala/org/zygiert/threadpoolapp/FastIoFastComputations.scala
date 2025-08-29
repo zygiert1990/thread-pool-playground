@@ -28,6 +28,7 @@ class FastIoFastComputations extends Simulation:
     useCase(ForkJoinPoolVirtualThreadPool),
     useCase(ForkJoinPoolCachedThreadPool),
     useCase(CachedThreadPool),
+    useCase(CachedThreadPoolVirtualThreadPool),
     useCase(FixedThreadPool),
     useCase(FixedThreadPoolVirtualThreadPool),
     useCase(FixedThreadPoolCachedThreadPool)

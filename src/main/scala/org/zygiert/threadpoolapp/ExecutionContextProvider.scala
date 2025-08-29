@@ -27,6 +27,8 @@ object ExecutionContextProvider:
             case ThreadPoolConfig.CTP =>
               val ec = cachedThreadPool
               ExecutionContexts(ec, ec)
+            case ThreadPoolConfig.CTP_VTP =>
+              ExecutionContexts(cachedThreadPool, virtualThreadPool)
             case ThreadPoolConfig.FTP =>
               val ec = fixedThreadPool
               ExecutionContexts(ec, ec)
@@ -52,5 +54,5 @@ object ExecutionContextProvider:
   private def fixedThreadPool = ExecutionContext.fromExecutor(Executors.newFixedThreadPool(Runtime.getRuntime.availableProcessors()))
 
   enum ThreadPoolConfig {
-    case FJP, FJP_VTP, FJP_CTP, CTP, FTP, FTP_VTP, FTP_CTP
+    case FJP, FJP_VTP, FJP_CTP, CTP, CTP_VTP, FTP, FTP_VTP, FTP_CTP
   }

@@ -1,0 +1,34 @@
+---
+lowercaseOutputName: true
+lowercaseOutputLabelNames: true
+rules:
+  # Memory metrics
+  - pattern: 'java.lang<type=Memory><HeapMemoryUsage>([a-z-]+)'
+    name: jvm_memory_heap_$1
+    type: GAUGE
+  - pattern: 'java.lang<type=Memory><NonHeapMemoryUsage>([a-z-]+)'
+    name: jvm_memory_nonheap_$1
+    type: GAUGE
+
+  # Thread metrics
+  - pattern: 'java.lang<type=Threading><>ThreadCount'
+    name: jvm_threads_count
+    type: GAUGE
+  - pattern: 'java.lang<type=Threading><>DaemonThreadCount'
+    name: jvm_threads_daemon
+    type: GAUGE
+  - pattern: 'java.lang<type=Threading><>PeakThreadCount'
+    name: jvm_threads_peak
+    type: GAUGE
+
+  # CPU metrics
+  - pattern: 'java.lang<type=OperatingSystem><>ProcessCpuLoad'
+    name: jvm_cpu_load_process
+    type: GAUGE
+  - pattern: 'java.lang<type=OperatingSystem><>SystemCpuLoad'
+    name: jvm_cpu_load_system
+    type: GAUGE
+  - pattern: 'java.lang<type=OperatingSystem><>ProcessCpuTime'
+    name: jvm_cpu_time_process_seconds
+    type: COUNTER
+    valueFactor: 0.000000001 # nanoseconds to seconds
