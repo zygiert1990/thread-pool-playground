@@ -1,44 +1,66 @@
 global:
   scrape_interval: 1s     # How frequently to scrape targets
 
-# A scrape configuration containing endpoints to scrape
 scrape_configs:
-  - job_name: 'thread-pool-playground-FJP'
+  # Application metrics (Tapir metrics)
+  - job_name: 'thread-pool-app-metrics'
+    metrics_path: '/metrics'
     static_configs:
       - targets: ['thread-pool-playground-FJP:8080']
-    metrics_path: '/metrics'  # Default path, change if needed
-
-  - job_name: 'thread-pool-playground-FJP-blocking'
-    static_configs:
+        labels:
+          instance: 'FJP'
       - targets: ['thread-pool-playground-FJP-blocking:8080']
-    metrics_path: '/metrics'  # Default path, change if needed
-
-  - job_name: 'thread-pool-playground-FJP_VTP'
-    static_configs:
+        labels:
+          instance: 'FJP-blocking'
       - targets: ['thread-pool-playground-FJP_VTP:8080']
-    metrics_path: '/metrics'  # Default path, change if needed
-
-  - job_name: 'thread-pool-playground-FJP_CTP'
-    static_configs:
+        labels:
+          instance: 'FJP_VTP'
       - targets: ['thread-pool-playground-FJP_CTP:8080']
-    metrics_path: '/metrics'  # Default path, change if needed
-
-  - job_name: 'thread-pool-playground-CTP'
-    static_configs:
+        labels:
+          instance: 'FJP_CTP'
       - targets: ['thread-pool-playground-CTP:8080']
-    metrics_path: '/metrics'  # Default path, change if needed
-
-  - job_name: 'thread-pool-playground-FTP'
-    static_configs:
+        labels:
+          instance: 'CTP'
+      - targets: ['thread-pool-playground-CTP_VTP:8080']
+        labels:
+          instance: 'CTP_VTP'
       - targets: ['thread-pool-playground-FTP:8080']
-    metrics_path: '/metrics'  # Default path, change if needed
-
-  - job_name: 'thread-pool-playground-FTP_VTP'
-    static_configs:
+        labels:
+          instance: 'FTP'
       - targets: ['thread-pool-playground-FTP_VTP:8080']
-    metrics_path: '/metrics'  # Default path, change if needed
-
-  - job_name: 'thread-pool-playground-FTP_CTP'
-    static_configs:
+        labels:
+          instance: 'FTP_VTP'
       - targets: ['thread-pool-playground-FTP_CTP:8080']
-    metrics_path: '/metrics'  # Default path, change if needed
+        labels:
+          instance: 'FTP_CTP'
+
+  # JVM metrics (JMX Prometheus Java Agent)
+  - job_name: 'thread-pool-jvm-metrics'
+    static_configs:
+      - targets: ['thread-pool-playground-FJP:8090']
+        labels:
+          instance: 'FJP'
+      - targets: ['thread-pool-playground-FJP-blocking:8090']
+        labels:
+          instance: 'FJP-blocking'
+      - targets: ['thread-pool-playground-FJP_VTP:8090']
+        labels:
+          instance: 'FJP_VTP'
+      - targets: ['thread-pool-playground-FJP_CTP:8090']
+        labels:
+          instance: 'FJP_CTP'
+      - targets: ['thread-pool-playground-CTP:8090']
+        labels:
+          instance: 'CTP'
+      - targets: ['thread-pool-playground-CTP_VTP:8090']
+        labels:
+          instance: 'CTP_VTP'
+      - targets: ['thread-pool-playground-FTP:8090']
+        labels:
+          instance: 'FTP'
+      - targets: ['thread-pool-playground-FTP_VTP:8090']
+        labels:
+          instance: 'FTP_VTP'
+      - targets: ['thread-pool-playground-FTP_CTP:8090']
+        labels:
+          instance: 'FTP_CTP'

@@ -5,18 +5,20 @@ services:
     image: thread-pool-playground
     ports:
       - "8080:8080"
+      - "9100:8090"
     environment:
       - threadPoolConfig=FJP
       - ioAppUrl=http://thread-pool-playground-io:9090
       - host=0.0.0.0
     stdin_open: true
     tty: true
-    command: [ "java", "-cp", "app.jar", "org.zygiert.threadpoolapp.run" ]
+    command: [ "java", "-javaagent:jmx_prometheus_javaagent-0.18.0.jar=8090:jmx_prometheus_config.yaml", "-cp", "app.jar", "org.zygiert.threadpoolapp.run" ]
 
   thread-pool-playground-FJP-blocking:
     image: thread-pool-playground
     ports:
       - "8081:8080"
+      - "9101:8090"
     environment:
       - threadPoolConfig=FJP
       - fjpBlockingIo=true
@@ -24,91 +26,98 @@ services:
       - host=0.0.0.0
     stdin_open: true
     tty: true
-    command: [ "java", "-cp", "app.jar", "org.zygiert.threadpoolapp.run" ]
+    command: [ "java", "-javaagent:jmx_prometheus_javaagent-0.18.0.jar=8090:jmx_prometheus_config.yaml", "-cp", "app.jar", "org.zygiert.threadpoolapp.run" ]
 
   thread-pool-playground-FJP_VTP:
     image: thread-pool-playground
     ports:
       - "8082:8080"
+      - "9102:8090"
     environment:
       - threadPoolConfig=FJP_VTP
       - ioAppUrl=http://thread-pool-playground-io:9090
       - host=0.0.0.0
     stdin_open: true
     tty: true
-    command: [ "java", "-cp", "app.jar", "org.zygiert.threadpoolapp.run" ]
+    command: [ "java", "-javaagent:jmx_prometheus_javaagent-0.18.0.jar=8090:jmx_prometheus_config.yaml", "-cp", "app.jar", "org.zygiert.threadpoolapp.run" ]
 
   thread-pool-playground-FJP_CTP:
     image: thread-pool-playground
     ports:
       - "8083:8080"
+      - "9103:8090"
     environment:
       - threadPoolConfig=FJP_CTP
       - ioAppUrl=http://thread-pool-playground-io:9090
       - host=0.0.0.0
     stdin_open: true
     tty: true
-    command: [ "java", "-cp", "app.jar", "org.zygiert.threadpoolapp.run" ]
+    command: [ "java", "-javaagent:jmx_prometheus_javaagent-0.18.0.jar=8090:jmx_prometheus_config.yaml", "-cp", "app.jar", "org.zygiert.threadpoolapp.run" ]
 
   thread-pool-playground-CTP:
     image: thread-pool-playground
     ports:
       - "8084:8080"
+      - "9104:8090"
     environment:
       - threadPoolConfig=CTP
       - ioAppUrl=http://thread-pool-playground-io:9090
       - host=0.0.0.0
     stdin_open: true
     tty: true
-    command: [ "java", "-cp", "app.jar", "org.zygiert.threadpoolapp.run" ]
+    command: [ "java", "-javaagent:jmx_prometheus_javaagent-0.18.0.jar=8090:jmx_prometheus_config.yaml", "-cp", "app.jar", "org.zygiert.threadpoolapp.run" ]
 
   thread-pool-playground-CTP_VTP:
     image: thread-pool-playground
     ports:
       - "8085:8080"
+      - "9105:8090"
     environment:
       - threadPoolConfig=CTP_VTP
       - ioAppUrl=http://thread-pool-playground-io:9090
       - host=0.0.0.0
     stdin_open: true
     tty: true
-    command: [ "java", "-cp", "app.jar", "org.zygiert.threadpoolapp.run" ]
+    command: [ "java", "-javaagent:jmx_prometheus_javaagent-0.18.0.jar=8090:jmx_prometheus_config.yaml", "-cp", "app.jar", "org.zygiert.threadpoolapp.run" ]
 
   thread-pool-playground-FTP:
     image: thread-pool-playground
     ports:
       - "8086:8080"
+      - "9106:8090"
     environment:
       - threadPoolConfig=FTP
       - ioAppUrl=http://thread-pool-playground-io:9090
       - host=0.0.0.0
     stdin_open: true
     tty: true
-    command: [ "java", "-cp", "app.jar", "org.zygiert.threadpoolapp.run" ]
+    command: [ "java", "-javaagent:jmx_prometheus_javaagent-0.18.0.jar=8090:jmx_prometheus_config.yaml", "-cp", "app.jar", "org.zygiert.threadpoolapp.run" ]
 
   thread-pool-playground-FTP_VTP:
     image: thread-pool-playground
     ports:
       - "8087:8080"
+      - "9107:8090"
     environment:
       - threadPoolConfig=FTP_VTP
       - ioAppUrl=http://thread-pool-playground-io:9090
       - host=0.0.0.0
     stdin_open: true
     tty: true
-    command: [ "java", "-cp", "app.jar", "org.zygiert.threadpoolapp.run" ]
+    command: [ "java", "-javaagent:jmx_prometheus_javaagent-0.18.0.jar=8090:jmx_prometheus_config.yaml", "-cp", "app.jar", "org.zygiert.threadpoolapp.run" ]
 
   thread-pool-playground-FTP_CTP:
     image: thread-pool-playground
     ports:
       - "8088:8080"
+      - "9108:8090"
     environment:
       - threadPoolConfig=FTP_CTP
       - ioAppUrl=http://thread-pool-playground-io:9090
       - host=0.0.0.0
     stdin_open: true
     tty: true
-    command: [ "java", "-cp", "app.jar", "org.zygiert.threadpoolapp.run" ]
+    command: [ "java", "-javaagent:jmx_prometheus_javaagent-0.18.0.jar=8090:jmx_prometheus_config.yaml", "-cp", "app.jar", "org.zygiert.threadpoolapp.run" ]
 
   thread-pool-playground-io:
     image: thread-pool-playground
