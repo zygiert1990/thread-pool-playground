@@ -19,7 +19,7 @@ class FastIoFastComputations extends Simulation:
 
   private def useCase(config: PortToThreadConfig) =
     request(config.description)
-      .inject(constantUsersPerSec(10).during(10.seconds))
+      .inject(constantUsersPerSec(4).during(60.seconds))
       .protocols(protocol(config.port))
 
   setUp(

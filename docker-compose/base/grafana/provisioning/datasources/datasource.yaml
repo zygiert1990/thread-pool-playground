@@ -1,0 +1,10 @@
+apiVersion: 1
+
+datasources:
+  - name: DS_PROMETHEUS
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    editable: true
+    uid: 8b35f7b4-76d9-42e3-9f04-c935076aca72

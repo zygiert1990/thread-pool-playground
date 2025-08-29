@@ -1,5 +1,5 @@
 global:
-  scrape_interval: 1s     # How frequently to scrape targets
+  scrape_interval: 2s     # How frequently to scrape targets
 
 scrape_configs:
   # Application metrics (Tapir metrics)
