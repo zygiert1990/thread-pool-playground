@@ -6,8 +6,6 @@ import com.typesafe.scalalogging.StrictLogging
 import sttp.client4.*
 import sttp.client4.jsoniter.*
 
-import scala.concurrent.{ExecutionContext, Future}
-
 object FileLoader extends StrictLogging:
 
   private val ioAppUrl = sys.env.getOrElse("ioAppUrl", "http://localhost:9090")
