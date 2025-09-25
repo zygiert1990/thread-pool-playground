@@ -7,7 +7,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 object FileProcessor extends StrictLogging:
 
-  private val numberOfCores = Runtime.getRuntime.availableProcessors()
+  private val numberOfThreads = 4
   private val baseExponent = 100
 
   given ExecutionContext = ExecutionContextProvider.executionContexts.cpuBound
@@ -22,7 +22,7 @@ object FileProcessor extends StrictLogging:
     } yield result
 
   private def resolveGroupSize(concurrencyMultiplier: Int, nrOfWords: Int): Int =
-    val concurrency = numberOfCores * concurrencyMultiplier
+    val concurrency = numberOfThreads * concurrencyMultiplier
     nrOfWords / concurrency + (if (nrOfWords % concurrency == 0) 0 else 1)
 
   private def resolveExponent(computationComplexity: Int): Int = baseExponent * computationComplexity

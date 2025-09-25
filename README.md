@@ -24,3 +24,4 @@ thread-pool-playground-app:
 thread-pool-playground-io-app:
 
 - `host` (optional) - default value is `localhost`
+- `port` (optional) - default value is `9095`

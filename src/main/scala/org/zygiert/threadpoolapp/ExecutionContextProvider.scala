@@ -48,10 +48,10 @@ object ExecutionContextProvider:
         )
     }
 
-  private def forkJoinPool: ExecutionContext = ExecutionContext.fromExecutor(Executors.newWorkStealingPool())
+  private def forkJoinPool: ExecutionContext = ExecutionContext.fromExecutor(Executors.newWorkStealingPool(4))
   private def virtualThreadPool = ExecutionContext.fromExecutor(Executors.newVirtualThreadPerTaskExecutor())
   private def cachedThreadPool = ExecutionContext.fromExecutor(Executors.newCachedThreadPool())
-  private def fixedThreadPool = ExecutionContext.fromExecutor(Executors.newFixedThreadPool(Runtime.getRuntime.availableProcessors()))
+  private def fixedThreadPool = ExecutionContext.fromExecutor(Executors.newFixedThreadPool(4))
 
   enum ThreadPoolConfig {
     case FJP, FJP_VTP, FJP_CTP, CTP, CTP_VTP, FTP, FTP_VTP, FTP_CTP

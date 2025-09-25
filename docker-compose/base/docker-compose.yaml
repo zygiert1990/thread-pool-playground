@@ -8,7 +8,7 @@ services:
       - "9100:8090"
     environment:
       - threadPoolConfig=FJP
-      - ioAppUrl=http://thread-pool-playground-io:9090
+      - ioAppUrl=http://thread-pool-playground-io-1:9095
       - host=0.0.0.0
     stdin_open: true
     tty: true
@@ -22,7 +22,7 @@ services:
     environment:
       - threadPoolConfig=FJP
       - fjpBlockingIo=true
-      - ioAppUrl=http://thread-pool-playground-io:9090
+      - ioAppUrl=http://thread-pool-playground-io-1:9095
       - host=0.0.0.0
     stdin_open: true
     tty: true
@@ -35,7 +35,7 @@ services:
       - "9102:8090"
     environment:
       - threadPoolConfig=FJP_VTP
-      - ioAppUrl=http://thread-pool-playground-io:9090
+      - ioAppUrl=http://thread-pool-playground-io-1:9095
       - host=0.0.0.0
     stdin_open: true
     tty: true
@@ -48,7 +48,7 @@ services:
       - "9103:8090"
     environment:
       - threadPoolConfig=FJP_CTP
-      - ioAppUrl=http://thread-pool-playground-io:9090
+      - ioAppUrl=http://thread-pool-playground-io-2:9096
       - host=0.0.0.0
     stdin_open: true
     tty: true
@@ -61,7 +61,7 @@ services:
       - "9104:8090"
     environment:
       - threadPoolConfig=CTP
-      - ioAppUrl=http://thread-pool-playground-io:9090
+      - ioAppUrl=http://thread-pool-playground-io-2:9096
       - host=0.0.0.0
     stdin_open: true
     tty: true
@@ -74,7 +74,7 @@ services:
       - "9105:8090"
     environment:
       - threadPoolConfig=CTP_VTP
-      - ioAppUrl=http://thread-pool-playground-io:9090
+      - ioAppUrl=http://thread-pool-playground-io-2:9096
       - host=0.0.0.0
     stdin_open: true
     tty: true
@@ -87,7 +87,7 @@ services:
       - "9106:8090"
     environment:
       - threadPoolConfig=FTP
-      - ioAppUrl=http://thread-pool-playground-io:9090
+      - ioAppUrl=http://thread-pool-playground-io-3:9097
       - host=0.0.0.0
     stdin_open: true
     tty: true
@@ -100,7 +100,7 @@ services:
       - "9107:8090"
     environment:
       - threadPoolConfig=FTP_VTP
-      - ioAppUrl=http://thread-pool-playground-io:9090
+      - ioAppUrl=http://thread-pool-playground-io-3:9097
       - host=0.0.0.0
     stdin_open: true
     tty: true
@@ -113,18 +113,41 @@ services:
       - "9108:8090"
     environment:
       - threadPoolConfig=FTP_CTP
-      - ioAppUrl=http://thread-pool-playground-io:9090
+      - ioAppUrl=http://thread-pool-playground-io-3:9097
       - host=0.0.0.0
     stdin_open: true
     tty: true
     command: [ "java", "-javaagent:jmx_prometheus_javaagent-0.18.0.jar=8090:jmx_prometheus_config.yaml", "-cp", "app.jar", "org.zygiert.threadpoolapp.run" ]
 
-  thread-pool-playground-io:
+  thread-pool-playground-io-1:
     image: thread-pool-playground
     ports:
-      - "9090:9090"
+      - "9095:9095"
     environment:
       - host=0.0.0.0
+      - port=9095
+    stdin_open: true
+    tty: true
+    command: [ "java", "-cp", "app.jar", "org.zygiert.ioapp.run" ]
+
+  thread-pool-playground-io-2:
+    image: thread-pool-playground
+    ports:
+      - "9096:9096"
+    environment:
+      - host=0.0.0.0
+      - port=9096
+    stdin_open: true
+    tty: true
+    command: [ "java", "-cp", "app.jar", "org.zygiert.ioapp.run" ]
+
+  thread-pool-playground-io-3:
+    image: thread-pool-playground
+    ports:
+      - "9097:9097"
+    environment:
+      - host=0.0.0.0
+      - port=9097
     stdin_open: true
     tty: true
     command: [ "java", "-cp", "app.jar", "org.zygiert.ioapp.run" ]

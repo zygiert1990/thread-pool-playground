@@ -8,7 +8,7 @@ import sttp.client4.jsoniter.*
 
 object FileLoader extends StrictLogging:
 
-  private val ioAppUrl = sys.env.getOrElse("ioAppUrl", "http://localhost:9090")
+  private val ioAppUrl = sys.env.getOrElse("ioAppUrl", "http://localhost:9095")
   private val delay = 500
 
   given JsonValueCodec[Seq[String]] = JsonCodecMaker.make
