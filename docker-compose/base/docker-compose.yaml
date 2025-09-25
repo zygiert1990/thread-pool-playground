@@ -12,6 +12,7 @@ services:
       - host=0.0.0.0
     stdin_open: true
     tty: true
+    cpuset: "0-3"
     command: [ "java", "-javaagent:jmx_prometheus_javaagent-0.18.0.jar=8090:jmx_prometheus_config.yaml", "-cp", "app.jar", "org.zygiert.threadpoolapp.run" ]
 
   thread-pool-playground-FJP-blocking:
@@ -26,6 +27,7 @@ services:
       - host=0.0.0.0
     stdin_open: true
     tty: true
+    cpuset: "4-7"
     command: [ "java", "-javaagent:jmx_prometheus_javaagent-0.18.0.jar=8090:jmx_prometheus_config.yaml", "-cp", "app.jar", "org.zygiert.threadpoolapp.run" ]
 
   thread-pool-playground-FJP_VTP:
@@ -39,6 +41,7 @@ services:
       - host=0.0.0.0
     stdin_open: true
     tty: true
+    cpuset: "8-11"
     command: [ "java", "-javaagent:jmx_prometheus_javaagent-0.18.0.jar=8090:jmx_prometheus_config.yaml", "-cp", "app.jar", "org.zygiert.threadpoolapp.run" ]
 
   thread-pool-playground-FJP_CTP:
@@ -52,6 +55,7 @@ services:
       - host=0.0.0.0
     stdin_open: true
     tty: true
+    cpuset: "12-15"
     command: [ "java", "-javaagent:jmx_prometheus_javaagent-0.18.0.jar=8090:jmx_prometheus_config.yaml", "-cp", "app.jar", "org.zygiert.threadpoolapp.run" ]
 
   thread-pool-playground-CTP:
@@ -65,6 +69,7 @@ services:
       - host=0.0.0.0
     stdin_open: true
     tty: true
+    cpuset: "16-19"
     command: [ "java", "-javaagent:jmx_prometheus_javaagent-0.18.0.jar=8090:jmx_prometheus_config.yaml", "-cp", "app.jar", "org.zygiert.threadpoolapp.run" ]
 
   thread-pool-playground-CTP_VTP:
@@ -78,6 +83,7 @@ services:
       - host=0.0.0.0
     stdin_open: true
     tty: true
+    cpuset: "20-23"
     command: [ "java", "-javaagent:jmx_prometheus_javaagent-0.18.0.jar=8090:jmx_prometheus_config.yaml", "-cp", "app.jar", "org.zygiert.threadpoolapp.run" ]
 
   thread-pool-playground-FTP:
@@ -91,6 +97,7 @@ services:
       - host=0.0.0.0
     stdin_open: true
     tty: true
+    cpuset: "24-27"
     command: [ "java", "-javaagent:jmx_prometheus_javaagent-0.18.0.jar=8090:jmx_prometheus_config.yaml", "-cp", "app.jar", "org.zygiert.threadpoolapp.run" ]
 
   thread-pool-playground-FTP_VTP:
@@ -104,6 +111,7 @@ services:
       - host=0.0.0.0
     stdin_open: true
     tty: true
+    cpuset: "28-31"
     command: [ "java", "-javaagent:jmx_prometheus_javaagent-0.18.0.jar=8090:jmx_prometheus_config.yaml", "-cp", "app.jar", "org.zygiert.threadpoolapp.run" ]
 
   thread-pool-playground-FTP_CTP:
@@ -117,6 +125,7 @@ services:
       - host=0.0.0.0
     stdin_open: true
     tty: true
+    cpuset: "32-35"
     command: [ "java", "-javaagent:jmx_prometheus_javaagent-0.18.0.jar=8090:jmx_prometheus_config.yaml", "-cp", "app.jar", "org.zygiert.threadpoolapp.run" ]
 
   thread-pool-playground-io-1:
@@ -128,6 +137,7 @@ services:
       - port=9095
     stdin_open: true
     tty: true
+    cpuset: "36"
     command: [ "java", "-cp", "app.jar", "org.zygiert.ioapp.run" ]
 
   thread-pool-playground-io-2:
@@ -139,6 +149,7 @@ services:
       - port=9096
     stdin_open: true
     tty: true
+    cpuset: "37"
     command: [ "java", "-cp", "app.jar", "org.zygiert.ioapp.run" ]
 
   thread-pool-playground-io-3:
@@ -150,6 +161,7 @@ services:
       - port=9097
     stdin_open: true
     tty: true
+    cpuset: "38"
     command: [ "java", "-cp", "app.jar", "org.zygiert.ioapp.run" ]
 
   prometheus:
