@@ -14,8 +14,6 @@ object FileLoader extends StrictLogging:
   given JsonValueCodec[Seq[String]] = JsonCodecMaker.make
 
   def load(longIO: Boolean): Seq[String] =
-
-    logger.info(s"Using $ioAppUrl as IO app URL")
     val start = System.nanoTime()
 
     val response = basicRequest
