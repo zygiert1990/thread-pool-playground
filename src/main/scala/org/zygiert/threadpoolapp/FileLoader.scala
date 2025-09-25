@@ -10,12 +10,12 @@ object FileLoader extends StrictLogging:
 
   private val ioAppUrl = sys.env.getOrElse("ioAppUrl", "http://localhost:9095")
   private val delay = 500
-  
-  logger.info(s"Using $ioAppUrl as IO app URL")
 
   given JsonValueCodec[Seq[String]] = JsonCodecMaker.make
 
   def load(longIO: Boolean): Seq[String] =
+
+    logger.info(s"Using $ioAppUrl as IO app URL")
     val start = System.nanoTime()
 
     val response = basicRequest
