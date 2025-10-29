@@ -17,9 +17,10 @@ thread-pool-playground-app:
 
 - `threadPoolConfig` (mandatory) — possible values: FJP, FJP_VTP, FJP_CTP, CTP, FTP, FTP_VTP, FTP_CTP
 - `ioAppUrl` (optional) - default value is `http://localhost:9090`
-- `fjpBlockingIo` (optional) - Indicates whether use `blocking` operation, default value is `false`. It only applies to
+- `fjpBlockingIo` (optional) - indicates whether use `blocking` operation, default value is `false`. It only applies to
   FJP thread pool config.
 - `host` (optional) - default value is `localhost`
+- `numberOfProcessingThreads` (optional) - default value is `4
 
 thread-pool-playground-io-app:
 

@@ -7,8 +7,10 @@ import scala.concurrent.{ExecutionContext, Future}
 
 object FileProcessor extends StrictLogging:
 
-  private val numberOfThreads = 4
+  private val numberOfThreads = sys.env.getOrElse("numberOfProcessingThreads", "4").toInt
   private val baseExponent = 100
+
+  logger.info(s"Number of processing threads is: $numberOfThreads")
 
   given ExecutionContext = ExecutionContextProvider.executionContexts.cpuBound
 

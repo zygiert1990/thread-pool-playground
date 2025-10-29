@@ -21,7 +21,7 @@ object Endpoints:
     .in(
       query[Int]("concurrencyMultiplier")
         .description(
-          "This number is a multiplier to number of available cores. It means that computation will be started concurrently according to formula: nrOfCores * concurrencyMultiplier."
+          "This number is a multiplier to number of processing cores. It means that computation will be started concurrently according to formula: nrOfProcessingCores * concurrencyMultiplier."
         )
         .default(1)
     )
