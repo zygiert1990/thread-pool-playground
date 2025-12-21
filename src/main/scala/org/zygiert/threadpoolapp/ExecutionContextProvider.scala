@@ -1,10 +1,12 @@
 package org.zygiert.threadpoolapp
 
+import com.typesafe.scalalogging.StrictLogging
+
 import java.util.concurrent.Executors
 import scala.concurrent.ExecutionContext
 import scala.util.Try
 
-object ExecutionContextProvider:
+object ExecutionContextProvider extends StrictLogging:
 
   val threadPoolConfigParam: String = "threadPoolConfig"
 
@@ -15,6 +17,7 @@ object ExecutionContextProvider:
   private def resolveExecutionContexts: ExecutionContexts =
     sys.env.get(threadPoolConfigParam) match {
       case Some(value) =>
+        logger.debug(s"thread pool config to parse: $value")
         Try(ThreadPoolConfig.valueOf(value))
           .map {
             case ThreadPoolConfig.FJP =>
@@ -36,6 +39,9 @@ object ExecutionContextProvider:
               ExecutionContexts(fixedThreadPool, virtualThreadPool)
             case ThreadPoolConfig.FTP_CTP =>
               ExecutionContexts(fixedThreadPool, cachedThreadPool)
+            case ThreadPoolConfig.VTP =>
+              val ec = virtualThreadPool
+              ExecutionContexts(ec, ec)
           }
           .getOrElse(
             throw new IllegalArgumentException(
@@ -48,11 +54,11 @@ object ExecutionContextProvider:
         )
     }
 
-  private def forkJoinPool: ExecutionContext = ExecutionContext.fromExecutor(Executors.newWorkStealingPool(4))
+  private def forkJoinPool: ExecutionContext = ExecutionContext.fromExecutor(Executors.newWorkStealingPool)
   private def virtualThreadPool = ExecutionContext.fromExecutor(Executors.newVirtualThreadPerTaskExecutor())
   private def cachedThreadPool = ExecutionContext.fromExecutor(Executors.newCachedThreadPool())
-  private def fixedThreadPool = ExecutionContext.fromExecutor(Executors.newFixedThreadPool(4))
+  private def fixedThreadPool = ExecutionContext.fromExecutor(Executors.newFixedThreadPool(Runtime.getRuntime.availableProcessors()))
 
   enum ThreadPoolConfig {
-    case FJP, FJP_VTP, FJP_CTP, CTP, CTP_VTP, FTP, FTP_VTP, FTP_CTP
+    case FJP, FJP_VTP, FJP_CTP, CTP, CTP_VTP, FTP, FTP_VTP, FTP_CTP, VTP
   }

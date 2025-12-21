@@ -11,18 +11,11 @@ Flow is straightforward. There is a single endpoint in thread-pool-playground-ap
 in a given file. File is provided by thread-pool-playground-io-app, so it is easier for me to manage the delay (I want
 to simulate long and short IO operations).
 
-There are some configurations that may be passed using system variables.
+There are some configurations that may be passed using system properties.
 
 thread-pool-playground-app:
 
-- `threadPoolConfig` (mandatory) — possible values: FJP, FJP_VTP, FJP_CTP, CTP, FTP, FTP_VTP, FTP_CTP
-- `ioAppUrl` (optional) - default value is `http://localhost:9090`
-- `fjpBlockingIo` (optional) - indicates whether use `blocking` operation, default value is `false`. It only applies to
+- `threadPoolConfig` (mandatory) — possible values: FJP, FJP_VTP, FJP_CTP, CTP, FTP, FTP_VTP, FTP_CTP, VTP
+- `fjpBlockingIo` (optional) – indicates whether use `blocking` operation, default value is `false`. It only applies to
   FJP thread pool config.
-- `host` (optional) - default value is `localhost`
-- `numberOfProcessingThreads` (optional) - default value is `4
-
-thread-pool-playground-io-app:
-
-- `host` (optional) - default value is `localhost`
-- `port` (optional) - default value is `9095`
+- `numberOfProcessingThreads` (optional) – default value is numebr of cores on the machine.

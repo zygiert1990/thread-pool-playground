@@ -7,14 +7,18 @@ import scala.concurrent.{ExecutionContext, Future}
 
 object FileProcessor extends StrictLogging:
 
-  private val numberOfThreads = sys.env.getOrElse("numberOfProcessingThreads", "4").toInt
+  private val numberOfThreads = sys.env
+    .get("numberOfProcessingThreads")
+    .map(_.toInt)
+    .getOrElse(Runtime.getRuntime.availableProcessors())
   private val baseExponent = 100
 
   logger.info(s"Number of processing threads is: $numberOfThreads")
 
   given ExecutionContext = ExecutionContextProvider.executionContexts.cpuBound
 
-  def process(longIO: Boolean, computationComplexity: Int, concurrencyMultiplier: Int): Future[BigInt] =
+  def process(longIO: Boolean, computationComplexity: Int, concurrencyMultiplier: Int): Future[BigInt] = {
+    logger.debug(s"longIO: $longIO, computationComplexity: $computationComplexity, concurrencyMultiplier: $concurrencyMultiplier")
     for {
       lines <- FileLoaderAdapter.load(longIO)
       notEmptyLines <- Future(lines.filter(!_.isBlank))
@@ -22,6 +26,7 @@ object FileProcessor extends StrictLogging:
       groupedWords <- Future(allWords.grouped(resolveGroupSize(concurrencyMultiplier, allWords.length)))
       result <- compute(resolveExponent(computationComplexity), groupedWords)
     } yield result
+  }
 
   private def resolveGroupSize(concurrencyMultiplier: Int, nrOfWords: Int): Int =
     val concurrency = numberOfThreads * concurrencyMultiplier
@@ -34,10 +39,10 @@ object FileProcessor extends StrictLogging:
 
   private def doComputation(words: Seq[String], exponent: Int): Future[BigInt] =
     Future {
-      val start = System.currentTimeMillis()
+      val start = System.nanoTime()
       val res = words.map(word => doComputation(word, exponent)).sum
-      val end = System.currentTimeMillis()
-      logger.debug(s"My Computation took: ${end - start}ms")
+      val end = System.nanoTime()
+      logger.debug(s"My Computation took: ${end - start}ns")
       res
     }
 

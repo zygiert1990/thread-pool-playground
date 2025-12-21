@@ -1,11 +1,12 @@
 package org.zygiert.threadpoolapp
 
+import com.typesafe.scalalogging.StrictLogging
 import org.zygiert.threadpoolapp.ExecutionContextProvider.ThreadPoolConfig.FJP
 import org.zygiert.threadpoolapp.ExecutionContextProvider.{ThreadPoolConfig, threadPoolConfigParam}
 
 import scala.concurrent.{ExecutionContext, Future, blocking}
 
-object FileLoaderAdapter:
+object FileLoaderAdapter extends StrictLogging:
 
   given ExecutionContext = ExecutionContextProvider.executionContexts.ioBound
 
@@ -16,6 +17,8 @@ object FileLoaderAdapter:
     )
   )
   private val fjpBlockingIo = sys.env.get("fjpBlockingIo").exists(_.toBoolean)
+
+  logger.debug(s"Use blocking IO: $fjpBlockingIo")
 
   def load(longIO: Boolean): Future[Seq[String]] =
     if (ThreadPoolConfig.valueOf(threadPoolConfig) == FJP && fjpBlockingIo)
