@@ -10,7 +10,7 @@ import scala.concurrent.{Await, ExecutionContext, Future}
 
   val program =
     for
-      binding <- NettyFutureServer().port(8080).addEndpoints(Endpoints.all).start()
+      binding <- NettyFutureServer().host("0.0.0.0").port(8080).addEndpoints(Endpoints.all).start()
       _ <- Future:
         println(s"Go to http://localhost:${binding.port}/docs to open SwaggerUI.")
         Thread.currentThread().join()
