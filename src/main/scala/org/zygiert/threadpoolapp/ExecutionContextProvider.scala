@@ -15,7 +15,7 @@ object ExecutionContextProvider extends StrictLogging:
   val executionContexts: ExecutionContexts = resolveExecutionContexts
 
   private def resolveExecutionContexts: ExecutionContexts =
-    sys.env.get(threadPoolConfigParam) match {
+    sys.props.get(threadPoolConfigParam) match {
       case Some(value) =>
         logger.debug(s"thread pool config to parse: $value")
         Try(ThreadPoolConfig.valueOf(value))

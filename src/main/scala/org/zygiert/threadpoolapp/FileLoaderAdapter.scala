@@ -10,13 +10,13 @@ object FileLoaderAdapter extends StrictLogging:
 
   given ExecutionContext = ExecutionContextProvider.executionContexts.ioBound
 
-  private val threadPoolConfig = sys.env.getOrElse(
+  private val threadPoolConfig = sys.props.getOrElse(
     threadPoolConfigParam,
     throw new IllegalStateException(
       s"No thread pool config provided. Please provide it using -DthreadPoolConfig=VALUE. Possible values are: ${ThreadPoolConfig.values.mkString(",")}"
     )
   )
-  private val fjpBlockingIo = sys.env.get("fjpBlockingIo").exists(_.toBoolean)
+  private val fjpBlockingIo = sys.props.get("fjpBlockingIo").exists(_.toBoolean)
 
   logger.debug(s"Use blocking IO: $fjpBlockingIo")
 
