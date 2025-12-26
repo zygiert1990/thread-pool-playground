@@ -25,9 +25,9 @@ class RunComputations extends Simulation:
   println(s"  Long IO: $longIO")
 
   private val request =
-    scenario(s"short computations & short IO")
+    scenario(s"Run computations with complexity $computationComplexity, concurrency multiplier $concurrencyMultiplier and long IO $longIO")
       .exec(
-        http(s"short computations & short IO")
+        http(s"Run computations")
           .get("/compute")
           .queryParamMap(
             Map("longIO" -> longIO, "computationComplexity" -> computationComplexity, "concurrencyMultiplier" -> concurrencyMultiplier)
