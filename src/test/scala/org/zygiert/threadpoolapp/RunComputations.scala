@@ -25,7 +25,7 @@ class RunComputations extends Simulation:
   println(s"  Long IO: $longIO")
 
   private val request =
-    scenario(s"Run computations with complexity $computationComplexity, concurrency multiplier $concurrencyMultiplier and long IO $longIO")
+    scenario(s"Run computations with complexity: $computationComplexity, concurrency multiplier: $concurrencyMultiplier and long IO: $longIO")
       .exec(
         http(s"Run computations")
           .get("/compute")
