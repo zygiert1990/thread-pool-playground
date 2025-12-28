@@ -12,7 +12,7 @@ import scala.concurrent.{Await, ExecutionContext, Future}
     for
       binding <- NettyFutureServer()
         .port(8080)
-        .config(NettyConfig.default.copy(requestTimeout = Some(120.seconds), host = "0.0.0.0"))
+        .config(NettyConfig.default.copy(requestTimeout = Some(1200.seconds), host = "0.0.0.0"))
         .addEndpoints(Endpoints.all)
         .start()
       _ <- Future:
