@@ -2,6 +2,7 @@ package org.zygiert.threadpoolapp
 
 import com.typesafe.scalalogging.StrictLogging
 
+import java.util.concurrent.atomic.AtomicInteger
 import scala.annotation.tailrec
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -12,12 +13,14 @@ object FileProcessor extends StrictLogging:
     .map(_.toInt)
     .getOrElse(Runtime.getRuntime.availableProcessors())
   private val baseExponent = 100
+  private val counter = new AtomicInteger(0)
 
   logger.info(s"Number of processing threads is: $numberOfThreads")
 
   given ExecutionContext = ExecutionContextProvider.executionContexts.cpuBound
 
   def process(longIO: Boolean, computationComplexity: Int, concurrencyMultiplier: Int): Future[BigInt] = {
+    given Int = counter.incrementAndGet()
     logger.debug(s"longIO: $longIO, computationComplexity: $computationComplexity, concurrencyMultiplier: $concurrencyMultiplier")
     for {
       lines <- FileLoaderAdapter.load(longIO)
@@ -34,17 +37,17 @@ object FileProcessor extends StrictLogging:
 
   private def resolveExponent(computationComplexity: Int): Int = baseExponent * computationComplexity
 
-  private def compute(exponent: Int, groupedWords: Iterator[Seq[String]]): Future[BigInt] = {
+  private def compute(exponent: Int, groupedWords: Iterator[Seq[String]])(using Int): Future[BigInt] = {
     logger.debug(s"Start computation with exponent: $exponent")
     Future.traverse(groupedWords)(words => doComputation(words, exponent)).map(_.sum)
   }
 
-  private def doComputation(words: Seq[String], exponent: Int): Future[BigInt] =
+  private def doComputation(words: Seq[String], exponent: Int)(using counter: Int): Future[BigInt] =
     Future {
       val start = System.nanoTime()
       val res = words.map(word => doComputation(word, exponent)).sum
       val end = System.nanoTime()
-      logger.debug(s"Computation part took: ${end - start}ns")
+      logger.debug(s"Computation part took: ${end - start}ns, counter value: $counter}")
       res
     }
 
