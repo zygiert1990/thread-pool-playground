@@ -34,15 +34,17 @@ object FileProcessor extends StrictLogging:
 
   private def resolveExponent(computationComplexity: Int): Int = baseExponent * computationComplexity
 
-  private def compute(exponent: Int, groupedWords: Iterator[Seq[String]]): Future[BigInt] =
+  private def compute(exponent: Int, groupedWords: Iterator[Seq[String]]): Future[BigInt] = {
+    logger.debug(s"Start computation with exponent: $exponent")
     Future.traverse(groupedWords)(words => doComputation(words, exponent)).map(_.sum)
+  }
 
   private def doComputation(words: Seq[String], exponent: Int): Future[BigInt] =
     Future {
       val start = System.nanoTime()
       val res = words.map(word => doComputation(word, exponent)).sum
       val end = System.nanoTime()
-      logger.debug(s"My Computation took: ${end - start}ns")
+      logger.debug(s"Computation part took: ${end - start}ns")
       res
     }
 

@@ -23,6 +23,8 @@ object FileLoaderAdapter extends StrictLogging:
   def load(longIO: Boolean): Future[Seq[String]] =
     if (ThreadPoolConfig.valueOf(threadPoolConfig) == FJP && fjpBlockingIo)
       Future {
+        logger.debug("Run blocking operation in FJP")
         blocking(FileLoader.load(longIO))
       }
-    else Future(FileLoader.load(longIO))
+    else
+      Future(FileLoader.load(longIO))
