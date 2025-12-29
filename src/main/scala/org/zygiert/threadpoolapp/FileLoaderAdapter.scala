@@ -23,8 +23,12 @@ object FileLoaderAdapter extends StrictLogging:
   def load(longIO: Boolean)(using counter: Int): Future[Seq[String]] =
     Future {
       logger.debug(s"Load file with counter: $counter")
-      if (ThreadPoolConfig.valueOf(threadPoolConfig) == FJP && fjpBlockingIo)
+      if (isGlobalOrFjp && fjpBlockingIo)
         blocking(FileLoader.load(longIO))
       else
         FileLoader.load(longIO)
     }
+
+  private def isGlobalOrFjp: Boolean =
+    val config = ThreadPoolConfig.valueOf(threadPoolConfig)
+    config == ThreadPoolConfig.GLOBAL || config == ThreadPoolConfig.FJP
