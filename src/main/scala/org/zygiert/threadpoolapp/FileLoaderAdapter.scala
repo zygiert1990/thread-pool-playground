@@ -1,7 +1,6 @@
 package org.zygiert.threadpoolapp
 
 import com.typesafe.scalalogging.StrictLogging
-import org.zygiert.threadpoolapp.ExecutionContextProvider.ThreadPoolConfig.FJP
 import org.zygiert.threadpoolapp.ExecutionContextProvider.{ThreadPoolConfig, threadPoolConfigParam}
 
 import scala.concurrent.{ExecutionContext, Future, blocking}
