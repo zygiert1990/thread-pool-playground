@@ -20,6 +20,13 @@ object ExecutionContextProvider extends StrictLogging:
         logger.debug(s"thread pool config to parse: $value")
         Try(ThreadPoolConfig.valueOf(value))
           .map {
+            case ThreadPoolConfig.GLOBAL =>
+              val ec = ExecutionContext.global
+              ExecutionContexts(ec, ec)
+            case ThreadPoolConfig.GLOBAL_VTP =>
+              ExecutionContexts(ExecutionContext.global, virtualThreadPool)
+            case ThreadPoolConfig.GLOBAL_CTP =>
+              ExecutionContexts(ExecutionContext.global, cachedThreadPool)
             case ThreadPoolConfig.FJP =>
               val ec = forkJoinPool
               ExecutionContexts(ec, ec)
@@ -60,5 +67,5 @@ object ExecutionContextProvider extends StrictLogging:
   private def fixedThreadPool = ExecutionContext.fromExecutor(Executors.newFixedThreadPool(Runtime.getRuntime.availableProcessors()))
 
   enum ThreadPoolConfig {
-    case FJP, FJP_VTP, FJP_CTP, CTP, CTP_VTP, FTP, FTP_VTP, FTP_CTP, VTP
+    case GLOBAL, GLOBAL_VTP, GLOBAL_CTP, FJP, FJP_VTP, FJP_CTP, CTP, CTP_VTP, FTP, FTP_VTP, FTP_CTP, VTP
   }
