@@ -19,3 +19,19 @@ thread-pool-playground-app:
 - `fjpBlockingIo` (optional) – indicates whether use `blocking` operation, default value is `false`. It only applies to
   FJP thread pool config.
 - `numberOfProcessingThreads` (optional) – default value is numebr of cores on the machine.
+
+For get more logs from Netty, please adjust Netty config:
+```
+        .config(NettyConfig.default.copy(
+          requestTimeout = Some(1200.seconds),
+          idleTimeout = Some(1200.seconds),
+          host = "0.0.0.0",
+          addLoggingHandler = true))
+```
+
+Having this, we can analyze intervals between the request was initially handled by Netty event loop and the 
+response was sent back:
+`./netty-log-analyzer.sh <log_file>`
+
+To check in what interval they arrived:
+`./netty-intervals-between-requests.sh <log_file>`
