@@ -5,17 +5,31 @@ import re
 import sys
 
 def main():
-    # Get root directory from command line argument or use current directory
-    if len(sys.argv) > 1:
-        root_dir = Path(sys.argv[1])
-    else:
-        root_dir = Path('.')
+    # Get root directory and memory scale from command line arguments
+    if len(sys.argv) < 3:
+        print("Usage: charts-generator.py <directory> <memory_scale_gb>")
+        print("  <directory>: Directory containing app-metrics.csv files")
+        print("  <memory_scale_gb>: Non-negative integer for memory chart scale (e.g., 4 for 4GB, 8 for 8GB)")
+        sys.exit(1)
+
+    root_dir = Path(sys.argv[1])
+
+    # Get memory scale parameter (in GB)
+    try:
+        memory_scale_gb = int(sys.argv[2])
+        if memory_scale_gb < 0:
+            print("Error: Memory scale must be a non-negative integer")
+            sys.exit(1)
+    except ValueError:
+        print("Error: Memory scale must be a non-negative integer")
+        sys.exit(1)
 
     if not root_dir.exists():
         print(f"Error: Directory '{root_dir}' does not exist")
         sys.exit(1)
 
     print(f"Scanning directory: {root_dir.absolute()}")
+    print(f"Memory scale: {memory_scale_gb} GB")
 
     # Find all app-metrics.csv files and extract labels
     data = {}
@@ -76,14 +90,21 @@ def main():
             percentile_df = pd.read_csv(percentile_file)
             percentile_labels = percentile_df.columns.tolist()
             percentile_values = percentile_df.iloc[0].tolist()
+
+            # Sort by values (ascending)
+            sorted_pairs = sorted(zip(percentile_labels, percentile_values), key=lambda x: x[1])
+            percentile_labels, percentile_values = zip(*sorted_pairs) if sorted_pairs else ([], [])
+            percentile_labels = list(percentile_labels)
+            percentile_values = list(percentile_values)
+
             print(f"Loaded 95th percentile data: {len(percentile_labels)} configurations")
         except Exception as e:
             print(f"Warning: Could not load {percentile_file}: {e}")
     else:
         print(f"Warning: {percentile_file} not found, skipping 95th percentile chart")
 
-    # Calculate 8 GB in KB: 8 * 1024 * 1024 = 8388608 KB
-    max_rss_kb = 8 * 1024 * 1024
+    # Calculate memory scale in KB: memory_scale_gb * 1024 * 1024
+    max_rss_kb = memory_scale_gb * 1024 * 1024
 
     # Build HTML content
     html_content = """
@@ -147,7 +168,7 @@ def main():
         }};
 
         var percentileLayout = {{
-            title: '95th Percentile Results',
+            title: '95th Percentile Results (Sorted Ascending)',
             xaxis: {{
                 title: 'Configuration',
                 tickangle: -45
@@ -165,7 +186,7 @@ def main():
 
 """
 
-    html_content += """        // CPU Chart Data
+    html_content += """    // CPU Chart Data
         var cpuTraces = [
 """
 
