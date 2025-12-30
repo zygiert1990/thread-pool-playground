@@ -70,6 +70,18 @@ echo ""
 source env.sh
 BASE_RESULTS_DIR="$RESULTS_DIR"
 
+# Validate BASE_RESULTS_DIR
+if [ -z "$BASE_RESULTS_DIR" ]; then
+  echo "ERROR: RESULTS_DIR is not set in env.sh"
+  exit 1
+fi
+
+# Try to create the base directory if it doesn't exist
+mkdir -p "$BASE_RESULTS_DIR" || {
+  echo "ERROR: Failed to create base results directory: $BASE_RESULTS_DIR"
+  exit 1
+}
+
 # Create subdirectories for each use case
 echo "Creating result directories..."
 for USE_CASE_CONFIG in "${USE_CASES[@]}"; do
