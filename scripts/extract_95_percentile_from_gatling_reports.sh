@@ -1,3 +1,4 @@
+
 #!/bin/bash
 
 # Check if directory parameter is provided
@@ -13,6 +14,9 @@ if [ ! -d "$ROOT_DIR" ]; then
     echo "Error: Directory '$ROOT_DIR' does not exist"
     exit 1
 fi
+
+# Define output file path
+OUTPUT_FILE="$ROOT_DIR/results-95-percentile.csv"
 
 # Arrays to store labels and values
 labels=()
@@ -35,9 +39,14 @@ for dir in "$ROOT_DIR"/*/; do
     fi
 done
 
-# Print CSV header (labels)
-IFS=','
-echo "${labels[*]}"
+# Write to CSV file
+{
+    # Print CSV header (labels)
+    IFS=','
+    echo "${labels[*]}"
 
-# Print CSV values
-echo "${values[*]}"
+    # Print CSV values
+    echo "${values[*]}"
+} > "$OUTPUT_FILE"
+
+echo "Results saved to: $OUTPUT_FILE"
