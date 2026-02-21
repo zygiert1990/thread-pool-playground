@@ -7,10 +7,10 @@ APP_RUNNER_IP="<app_runner_ip>"
 
 # Gatling runner connection
 GATLING_RUNNER="gatling-runner"
-GATLING_RUNNER_USER="<gatling-runner-user>"
+GATLING_RUNNER_HOME="<gatling-runner-user>"
 
 # Gatling runner project path
-GATLING_RUNNER_PROJECT_PATH="/home/$GATLING_RUNNER_USER/thread-pool-playground"
+GATLING_RUNNER_PROJECT_PATH="$GATLING_RUNNER_HOME/thread-pool-playground"
 
 # Gatling simulation class (full path, e.g., com.example.MySimulation)
 GATLING_SIMULATION="org.zygiert.threadpoolapp.RunComputations"
