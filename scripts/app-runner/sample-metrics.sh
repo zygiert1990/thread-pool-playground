@@ -11,8 +11,8 @@ PID=$1
 INTERVAL=$2
 OUTPUT_FILE=$3
 
-# Write CSV header with both CPU percentage styles
-echo "timestamp,cpu_percent_per_core,cpu_percent_system_wide,rss_kb,rss_mb,threads" > "$OUTPUT_FILE"
+# Write CSV header with heap memory instead of RSS
+echo "timestamp,cpu_percent_per_core,cpu_percent_system_wide,heap_used_mb,threads" > "$OUTPUT_FILE"
 
 echo "Starting metrics sampling for PID $PID (interval: ${INTERVAL}s)"
 
@@ -67,18 +67,33 @@ while kill -0 "$PID" 2>/dev/null; do
   PREV_TOTAL=$TOTAL_CPU
   PREV_PROCESS=$PROCESS_TIME
 
-  # ===== MEMORY MEASUREMENT =====
-  RSS=$(awk '/^VmRSS:/ {print $2}' /proc/$PID/status 2>/dev/null)
-  RSS_MB=$(awk "BEGIN {printf \"%.2f\", $RSS / 1024}")
+  # ===== MEMORY MEASUREMENT (using jstat) =====
+  JSTAT_OUTPUT=$(jstat -gc $PID 2>/dev/null | tail -n 1)
+
+  if [ -z "$JSTAT_OUTPUT" ]; then
+    echo "Process $PID no longer exists or jstat failed, stopping sampler"
+    break
+  fi
+
+  # Parse jstat output: columns are S0U S1U EU OU (all in KB)
+  # S0U = Survivor 0 Used, S1U = Survivor 1 Used, EU = Eden Used, OU = Old Gen Used
+  S0U=$(echo "$JSTAT_OUTPUT" | awk '{print $3}')
+  S1U=$(echo "$JSTAT_OUTPUT" | awk '{print $4}')
+  EU=$(echo "$JSTAT_OUTPUT" | awk '{print $6}')
+  OU=$(echo "$JSTAT_OUTPUT" | awk '{print $8}')
+
+  # Total heap used = Eden + Survivor spaces + Old Gen (in MB)
+  HEAP_USED_MB=$(awk "BEGIN {printf \"%.2f\", ($S0U + $S1U + $EU + $OU) / 1024}")
+
   THREADS=$(awk '/^Threads:/ {print $2}' /proc/$PID/status 2>/dev/null)
 
-  if [ -z "$RSS" ] || [ -z "$THREADS" ]; then
+  if [ -z "$THREADS" ]; then
     echo "Process $PID no longer exists, stopping sampler"
     break
   fi
 
-  # Append to CSV with BOTH CPU metrics
-  echo "$TIMESTAMP,$CPU_PER_CORE,$CPU_SYSTEM_WIDE,$RSS,$RSS_MB,$THREADS" >> "$OUTPUT_FILE"
+  # Append to CSV with heap memory metric
+  echo "$TIMESTAMP,$CPU_PER_CORE,$CPU_SYSTEM_WIDE,$HEAP_USED_MB,$THREADS" >> "$OUTPUT_FILE"
 
   sleep "$INTERVAL"
 done

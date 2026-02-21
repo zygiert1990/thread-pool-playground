@@ -30,6 +30,9 @@ print_time_summary() {
 
 # Array of all thread pool configurations from the enum
 THREAD_POOL_CONFIGS=(
+  "CUS"
+  "CUS_VTP"
+  "CUS_CTP"
   "GLOBAL"
   "GLOBAL_VTP"
   "GLOBAL_CTP"
@@ -60,7 +63,7 @@ USE_CASES=(
 
 echo "==================================================================="
 echo "=== Starting full benchmark suite ==="
-echo "=== Total runs: 4 use cases × 14 configs = 56 benchmark runs ==="
+echo "=== Total runs: 4 use cases × 15 configs = 60 benchmark runs ==="
 echo "==================================================================="
 echo ""
 print_time_summary "Script started"
@@ -119,7 +122,7 @@ for USE_CASE_CONFIG in "${USE_CASES[@]}"; do
   sed -i '.bak' "s|^RESULTS_DIR=.*|RESULTS_DIR=\"$BASE_RESULTS_DIR/$USE_CASE\"|" env.sh
 
   echo "=== Starting benchmark suite for $USE_CASE ==="
-  echo "Total runs for this use case: 14 (10 configs + 2 GLOBAL variants + 2 FJP variants)"
+  echo "Total runs for this use case: 15 configs"
   echo ""
 
   RUN_COUNT=0
@@ -129,53 +132,16 @@ for USE_CASE_CONFIG in "${USE_CASES[@]}"; do
     RUN_COUNT=$((RUN_COUNT + 1))
     TOTAL_RUNS=$((TOTAL_RUNS + 1))
 
-    if [ "$CONFIG" = "GLOBAL" ] || [ "$CONFIG" = "FJP" ]; then
-      # Run GLOBAL/FJP with fjpBlockingIo=false
-      echo "=========================================="
-      echo "USE CASE: $USE_CASE ($OUTER_RUN/4)"
-      echo "Run $RUN_COUNT/14 (Total: $TOTAL_RUNS/56): $CONFIG with fjpBlockingIo=false"
-      echo "=========================================="
+    echo "=========================================="
+    echo "USE CASE: $USE_CASE ($OUTER_RUN/4)"
+    echo "Run $RUN_COUNT/15 (Total: $TOTAL_RUNS/60): $CONFIG"
+    echo "=========================================="
 
-      # Modify env.sh (macOS compatible)
-      sed -i '.bak' "s/^THREAD_POOL_CONFIG=.*/THREAD_POOL_CONFIG=\"$CONFIG\"/" env.sh
-      sed -i '.bak' "s/^FJP_BLOCKING_IO=.*/FJP_BLOCKING_IO=\"false\"/" env.sh
+    sed -i '.bak' "s/^THREAD_POOL_CONFIG=.*/THREAD_POOL_CONFIG=\"$CONFIG\"/" env.sh
 
-      # Run benchmark
-      ./run-benchmark.sh
+    ./run-benchmark.sh
 
-      print_time_summary "Completed: $CONFIG with fjpBlockingIo=false"
-      echo ""
-      echo "Waiting 90 seconds before next run..."
-      sleep 90
-
-      # Run GLOBAL/FJP with fjpBlockingIo=true
-      RUN_COUNT=$((RUN_COUNT + 1))
-      TOTAL_RUNS=$((TOTAL_RUNS + 1))
-      echo "=========================================="
-      echo "USE CASE: $USE_CASE ($OUTER_RUN/4)"
-      echo "Run $RUN_COUNT/14 (Total: $TOTAL_RUNS/56): $CONFIG with fjpBlockingIo=true"
-      echo "=========================================="
-
-      sed -i '.bak' "s/^FJP_BLOCKING_IO=.*/FJP_BLOCKING_IO=\"true\"/" env.sh
-
-      ./run-benchmark.sh
-
-      print_time_summary "Completed: $CONFIG with fjpBlockingIo=true"
-    else
-      # For all other configs, fjpBlockingIo doesn't matter - leave it empty
-      echo "=========================================="
-      echo "USE CASE: $USE_CASE ($OUTER_RUN/4)"
-      echo "Run $RUN_COUNT/14 (Total: $TOTAL_RUNS/56): $CONFIG"
-      echo "=========================================="
-
-      sed -i '.bak' "s/^THREAD_POOL_CONFIG=.*/THREAD_POOL_CONFIG=\"$CONFIG\"/" env.sh
-      sed -i '.bak' "s/^FJP_BLOCKING_IO=.*/FJP_BLOCKING_IO=\"\"/" env.sh
-
-      ./run-benchmark.sh
-
-      print_time_summary "Completed: $CONFIG"
-    fi
-
+    print_time_summary "Completed: $CONFIG"
     echo ""
     echo "Waiting 90 seconds before next run..."
     sleep 90
@@ -204,7 +170,7 @@ TOTAL_ELAPSED=$(elapsed_time $SCRIPT_START_TIME)
 echo ""
 echo "==================================================================="
 echo "=== Full benchmark suite complete ==="
-echo "=== All 4 use cases tested (56 total configurations) ==="
+echo "=== All 4 use cases tested (60 total configurations) ==="
 echo "⏱️  Total execution time: $TOTAL_ELAPSED"
 echo "==================================================================="
 echo "Results saved in:"

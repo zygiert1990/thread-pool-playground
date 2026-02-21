@@ -28,7 +28,6 @@ JVM_OPTS="-Xmx8g"
 
 # Configuration parameters (will be passed as -D flags and used in result folder name)
 THREAD_POOL_CONFIG=""
-FJP_BLOCKING_IO=""
 
 # Sampling interval (seconds)
 SAMPLE_INTERVAL=2

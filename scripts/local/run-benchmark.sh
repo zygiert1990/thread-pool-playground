@@ -6,9 +6,6 @@ source ./env.sh
 
 # Build configuration name for results folder
 CONFIG_NAME="${THREAD_POOL_CONFIG}"
-if [ -n "$FJP_BLOCKING_IO" ]; then
-  CONFIG_NAME="${CONFIG_NAME}_fjp-${FJP_BLOCKING_IO}"
-fi
 
 TIMESTAMP=$(date +%Y%m%d-%H%M%S)
 RUN_DIR="$RESULTS_DIR/${CONFIG_NAME}_${TIMESTAMP}"
@@ -20,9 +17,6 @@ mkdir -p "$RUN_DIR"
 
 # Build JVM system properties
 SYSTEM_PROPS="-DthreadPoolConfig=$THREAD_POOL_CONFIG"
-if [ -n "$FJP_BLOCKING_IO" ]; then
-  SYSTEM_PROPS="$SYSTEM_PROPS -DfjpBlockingIo=$FJP_BLOCKING_IO"
-fi
 
 # Combine with JVM opts
 FULL_JVM_OPTS="$JVM_OPTS $SYSTEM_PROPS"
@@ -72,7 +66,6 @@ scp -r "$GATLING_RUNNER:$LATEST_GATLING_DIR" "$RUN_DIR/gatling-results/"
 echo "Configuration: $CONFIG_NAME" > "$RUN_DIR/run-info.txt"
 echo "Timestamp: $TIMESTAMP" >> "$RUN_DIR/run-info.txt"
 echo "threadPoolConfig: $THREAD_POOL_CONFIG" >> "$RUN_DIR/run-info.txt"
-echo "fjpBlockingIo: ${FJP_BLOCKING_IO:-<not set>}" >> "$RUN_DIR/run-info.txt"
 echo "Gatling Simulation: $GATLING_SIMULATION" >> "$RUN_DIR/run-info.txt"
 echo "Target Host: $APP_RUNNER_IP:$APP_PORT" >> "$RUN_DIR/run-info.txt"
 echo "Computation Complexity: $COMPUTATION_COMPLEXITY" >> "$RUN_DIR/run-info.txt"

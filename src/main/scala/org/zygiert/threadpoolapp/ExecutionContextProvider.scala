@@ -2,13 +2,13 @@ package org.zygiert.threadpoolapp
 
 import com.typesafe.scalalogging.StrictLogging
 
-import java.util.concurrent.Executors
+import java.util.concurrent.{Executors, LinkedBlockingQueue, ThreadPoolExecutor, TimeUnit}
 import scala.concurrent.ExecutionContext
 import scala.util.Try
 
 object ExecutionContextProvider extends StrictLogging:
 
-  val threadPoolConfigParam: String = "threadPoolConfig"
+  private val threadPoolConfigParam: String = "threadPoolConfig"
 
   case class ExecutionContexts(cpuBound: ExecutionContext, ioBound: ExecutionContext)
 
@@ -27,6 +27,13 @@ object ExecutionContextProvider extends StrictLogging:
               ExecutionContexts(ExecutionContext.global, virtualThreadPool)
             case ThreadPoolConfig.GLOBAL_CTP =>
               ExecutionContexts(ExecutionContext.global, cachedThreadPool)
+            case ThreadPoolConfig.CUS =>
+              val ec = cusThreadPool
+              ExecutionContexts(ec, ec)
+            case ThreadPoolConfig.CUS_VTP =>
+              ExecutionContexts(cusThreadPool, virtualThreadPool)
+            case ThreadPoolConfig.CUS_CTP =>
+              ExecutionContexts(cusThreadPool, cachedThreadPool)
             case ThreadPoolConfig.FJP =>
               val ec = forkJoinPool
               ExecutionContexts(ec, ec)
@@ -65,7 +72,16 @@ object ExecutionContextProvider extends StrictLogging:
   private def virtualThreadPool = ExecutionContext.fromExecutor(Executors.newVirtualThreadPerTaskExecutor())
   private def cachedThreadPool = ExecutionContext.fromExecutor(Executors.newCachedThreadPool())
   private def fixedThreadPool = ExecutionContext.fromExecutor(Executors.newFixedThreadPool(Runtime.getRuntime.availableProcessors()))
+  private def cusThreadPool = ExecutionContext.fromExecutor(
+    new ThreadPoolExecutor(
+      Runtime.getRuntime.availableProcessors(),
+      Runtime.getRuntime.availableProcessors() * 2,
+      60L,
+      TimeUnit.SECONDS,
+      new LinkedBlockingQueue[Runnable]
+    )
+  )
 
-  enum ThreadPoolConfig {
-    case GLOBAL, GLOBAL_VTP, GLOBAL_CTP, FJP, FJP_VTP, FJP_CTP, CTP, CTP_VTP, FTP, FTP_VTP, FTP_CTP, VTP
+  private enum ThreadPoolConfig {
+    case CUS, CUS_VTP, CUS_CTP, GLOBAL, GLOBAL_VTP, GLOBAL_CTP, FJP, FJP_VTP, FJP_CTP, CTP, CTP_VTP, FTP, FTP_VTP, FTP_CTP, VTP
   }

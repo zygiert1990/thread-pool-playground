@@ -23,7 +23,7 @@ object FileProcessor extends StrictLogging:
     given Int = counter.incrementAndGet()
     logger.debug(s"longIO: $longIO, computationComplexity: $computationComplexity, concurrencyMultiplier: $concurrencyMultiplier")
     for {
-      lines <- FileLoaderAdapter.load(longIO)
+      lines <- FileLoader.load(longIO)
       notEmptyLines <- Future(lines.filter(!_.isBlank))
       allWords <- Future(notEmptyLines.flatMap(_.split(" ").toSeq))
       groupedWords <- Future(allWords.grouped(resolveGroupSize(concurrencyMultiplier, allWords.length)))

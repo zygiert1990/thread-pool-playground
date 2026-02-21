@@ -16,8 +16,6 @@ There are some configurations that may be passed using system properties.
 thread-pool-playground-app:
 
 - `threadPoolConfig` (mandatory) — possible values: FJP, FJP_VTP, FJP_CTP, CTP, FTP, FTP_VTP, FTP_CTP, VTP
-- `fjpBlockingIo` (optional) – indicates whether use `blocking` operation, default value is `false`. It only applies to
-  FJP thread pool config.
 - `numberOfProcessingThreads` (optional) – default value is numebr of cores on the machine.
 
 For get more logs from Netty, please adjust Netty config:
