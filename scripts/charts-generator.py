@@ -103,8 +103,8 @@ def main():
     else:
         print(f"Warning: {percentile_file} not found, skipping 95th percentile chart")
 
-    # Calculate memory scale in KB: memory_scale_gb * 1024 * 1024
-    max_rss_kb = memory_scale_gb * 1024 * 1024
+    # Calculate memory scale in MB for heap chart
+    max_heap_mb = memory_scale_gb * 1024
 
     # Build HTML content
     html_content = """
@@ -144,7 +144,7 @@ def main():
 """
 
     html_content += """    <div class="chart-container" id="cpu-chart"></div>
-    <div class="chart-container" id="rss-chart"></div>
+    <div class="chart-container" id="heap-chart"></div>
     <div class="chart-container" id="threads-chart"></div>
 
     <script>
@@ -224,14 +224,14 @@ def main():
 
         Plotly.newPlot('cpu-chart', cpuTraces, cpuLayout, {{responsive: true}});
 
-        // RSS Chart Data
-        var rssTraces = [
+        // Heap Memory Chart Data
+        var heapTraces = [
 """
 
-    # Add RSS traces
+    # Add Heap traces
     for name, df in data.items():
         x_data = df['relative_time'].tolist()
-        y_data = df['rss_kb'].tolist()
+        y_data = df['heap_used_mb'].tolist()
         html_content += f"""
             {{
                 x: {x_data},
@@ -246,21 +246,21 @@ def main():
     html_content += f"""
         ];
 
-        var rssLayout = {{
-            title: 'Memory usage in KB',
+        var heapLayout = {{
+            title: 'Heap Memory Usage (MB)',
             xaxis: {{
                 title: 'Time (seconds)',
                 range: [0, {max_duration}]
             }},
             yaxis: {{
-                title: 'Memory (KB)',
-                range: [0, {max_rss_kb}]
+                title: 'Heap (MB)',
+                range: [0, {max_heap_mb}]
             }},
             hovermode: 'x unified',
             height: 500
         }};
 
-        Plotly.newPlot('rss-chart', rssTraces, rssLayout, {{responsive: true}});
+        Plotly.newPlot('heap-chart', heapTraces, heapLayout, {{responsive: true}});
 
         // Threads Chart Data
         var threadsTraces = [
